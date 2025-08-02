@@ -25,17 +25,4 @@ public class FollowerSubsystem extends SubsystemBase {
         ChassisSpeeds targetSpeed = holonomicDriveController.calculate(currentPose, targetState, targetState.poseMeters.getRotation());
         return mecanumDriveKinematics.toWheelSpeeds(targetSpeed);
     }
-
-
-
-
-    @Override
-    public void periodic() {
-        if(isTrajectoryRunning){
-            currentTime = System.nanoTime();
-            double trajectoryTime = TimeUnit.SECONDS.convert(currentTime-startTime, TimeUnit.NANOSECONDS);
-            Trajectory.State targetState = currentTrajectory.sample(trajectoryTime);
-            driveSubsystem.setSpeed(targetWheelSpeeds.frontLeftMetersPerSecond, targetWheelSpeeds.frontRightMetersPerSecond, targetWheelSpeeds.rearLeftMetersPerSecond, targetWheelSpeeds.rearRightMetersPerSecond);
-        }
-    }
 }

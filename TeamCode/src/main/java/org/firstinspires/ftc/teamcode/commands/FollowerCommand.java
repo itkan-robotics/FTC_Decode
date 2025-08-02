@@ -37,7 +37,7 @@ public class FollowerCommand extends CommandBase {
     @Override
     public void execute() {
             currentTime = System.nanoTime();
-            trajectoryTime = TimeUnit.SECONDS.convert(currentTime-startTime, TimeUnit.NANOSECONDS);
+            trajectoryTime =(currentTime-startTime)/1000000000.0;
             Trajectory.State targetState = trajectory.sample(trajectoryTime);
             MecanumDriveWheelSpeeds targetWheelSpeeds = follower.getTargetWheelSpeeds(targetState, pinpoint.getPose());
             drive.setSpeed(targetWheelSpeeds.frontLeftMetersPerSecond, targetWheelSpeeds.frontRightMetersPerSecond, targetWheelSpeeds.rearLeftMetersPerSecond, targetWheelSpeeds.rearRightMetersPerSecond);

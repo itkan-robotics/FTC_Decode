@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.FollowerSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.util.HeadingProfiledPIDController;
 import org.firstinspires.ftc.teamcode.util.HolonomicDriveController;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp
 @Config
-public class FollowerTuning extends OpMode {
+public class FollowerTuner extends OpMode {
     PinpointSubsystem pinpoint;
     DriveSubsystem drive;
     HolonomicDriveController holonomicDriveController;
@@ -63,7 +62,7 @@ public class FollowerTuning extends OpMode {
     public void loop() {
         holonomicDriveController = new HolonomicDriveController(new PIDController(xP, xI, xD), new PIDController(yP, yI, yD), new HeadingProfiledPIDController(tP, tI, tD, new TrapezoidProfile.Constraints(Constants.maxVelocity, Constants.maxAcceleration)));
         currentTime = System.nanoTime();
-        double trajectoryTime = TimeUnit.SECONDS.convert(currentTime-startTime, TimeUnit.NANOSECONDS);
+        double trajectoryTime = (currentTime-startTime)/1000000000.0;
         Trajectory.State targetState = trajectory.sample(trajectoryTime);
         ChassisSpeeds targetSpeed = holonomicDriveController.calculate(pinpoint.getPose(), targetState, targetState.poseMeters.getRotation());
         MecanumDriveWheelSpeeds targetWheelSpeeds = mecanumDriveKinematics.toWheelSpeeds(targetSpeed);

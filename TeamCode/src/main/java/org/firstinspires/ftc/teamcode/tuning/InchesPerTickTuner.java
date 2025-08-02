@@ -41,5 +41,6 @@ public class InchesPerTickTuner extends OpMode {
         avgTicks /= 4;
         telemetry.addData("Current Ticks", avgTicks);
         telemetry.addData("Inches Per Tick", ((double)inchesPushed)/avgTicks);
+        telemetry.update();
     }
 }
