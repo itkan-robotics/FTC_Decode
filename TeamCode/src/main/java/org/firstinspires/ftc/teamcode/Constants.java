@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class Constants {
     //TODO Find how many inches the robot travels with one full motor rotation
-    public static final double inchesPerWheelRotation = 7.8;
+    public static final double inchesPerTick = 7.8;
     public static final double metersToInches = 39.37010;
 
     public static final double blockerOpenPos = 0.5;
