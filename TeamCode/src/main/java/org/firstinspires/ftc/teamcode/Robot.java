@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
+import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.commands.*;
@@ -15,6 +16,9 @@ import org.firstinspires.ftc.teamcode.subsystems.slides.*;
 import org.firstinspires.ftc.teamcode.util.*;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Robot {
@@ -65,10 +69,56 @@ public class Robot {
                     new IntakeCommand(intake, 0)
             )
     );
-    public static Command highBasketScore = new SequentialCommandGroup(
-            new SetSlideCommand(vSlide, Constants.highBasketHeight),
-            new SetServoCommand(hand, Constants.handBasketScorePos),
-            new WaitCommand(0.15),
-            new SetServoCommand(grabber, Constants.grabberOpenPos)
-    );
+    public static Command cycleCommand(Trajectory intakeTrajectory, Trajectory scoreTrajectory){
+        return new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                        new FollowerCommand(follower, drive, pinpoint, intakeTrajectory),
+                        new SetSlideCommand(vSlide, 0),
+                        new SetSlideCommand(hSlide, 590),
+                        new SetServoCommand(intakeRot, Constants.intakeRotIntakePos),
+                        new SetServoCommand(blocker, Constants.blockerClosePos),
+                        new SetServoCommand(hand, Constants.handTransferPos),
+                        new SetServoCommand(grabber, Constants.grabberOpenPos),
+                        new AutoIntakeCommand(intake, colorSensor, -1, "BlueYellow")
+                ),
+                new ParallelCommandGroup(
+                       new SequentialCommandGroup(
+                               new ParallelCommandGroup(
+                                       new SetSlideCommand(hSlide, 0),
+                                       new SetServoCommand(intakeRot, Constants.intakeRotTransferPos),
+                                       new IntakeCommand(intake, -0.5)
+                               ),
+                               new SetServoCommand(blocker, Constants.blockerOpenPos),
+                               new WaitCommand(0.2),
+                               new ParallelCommandGroup(
+                                       new SetServoCommand(grabber, Constants.grabberClosePos),
+                                       new IntakeCommand(intake, 0),
+                                       new SetSlideCommand(vSlide, Constants.highBasketHeight),
+                                       new SetServoCommand(hand, Constants.handBasketScorePos)
+                               )
+                       ),
+                       new FollowerCommand(follower, drive, pinpoint, scoreTrajectory),
+                        new SetServoCommand(grabber, Constants.grabberOpenPos)
+                )
+
+
+        );
+    }
+    public static Command getHighBasketScoreCommand(Trajectory trajectory){
+        return new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                        new FollowerCommand(follower, drive, pinpoint, trajectory),
+                        new SetSlideCommand(vSlide, Constants.highBasketHeight),
+                        new SetServoCommand(hand, Constants.handBasketScorePos)
+                ),
+                new SetServoCommand(grabber, Constants.grabberOpenPos)
+        );
+    }
+    public static Trajectory reverseTrajectory(Trajectory t){
+        List<Trajectory.State> temp = new ArrayList<>();
+        for(Trajectory.State state : t.getStates()){
+            temp.add(0, state);
+        }
+        return new Trajectory(temp);
+    }
 }
