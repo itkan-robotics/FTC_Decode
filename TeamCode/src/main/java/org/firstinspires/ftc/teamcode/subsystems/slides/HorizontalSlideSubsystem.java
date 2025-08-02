@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems.slides;
 
 import android.hardware.HardwareBuffer;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class HorizontalSlideSubsystem implements Slide {
+public class HorizontalSlideSubsystem extends SubsystemBase implements Slide {
     SlideSubsystem slide;
     public HorizontalSlideSubsystem(HardwareMap hardwareMap, String name, boolean flipEncoder){
         slide = new SlideSubsystem(hardwareMap, name, flipEncoder);

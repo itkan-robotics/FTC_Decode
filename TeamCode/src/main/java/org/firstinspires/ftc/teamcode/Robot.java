@@ -1,24 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
-import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.subsystems.ColorSensorSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.FollowerSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.servos.BlockerSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.servos.GrabberSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.servos.HandSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.servos.IntakeRotSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.slides.HorizontalSlideSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.slides.VerticalSlideSubsystem;
-import org.firstinspires.ftc.teamcode.util.HolonomicDriveController;
+import org.firstinspires.ftc.teamcode.commands.*;
+import org.firstinspires.ftc.teamcode.subsystems.*;
+import org.firstinspires.ftc.teamcode.subsystems.servos.*;
+import org.firstinspires.ftc.teamcode.subsystems.slides.*;
+import org.firstinspires.ftc.teamcode.util.*;
+import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.command.SubsystemBase;
+
 
 public class Robot {
     public static IntakeSubsystem intake;
@@ -39,11 +36,39 @@ public class Robot {
         colorSensor = new ColorSensorSubsystem(h, Constants.colorSensorName);
         pinpoint = new PinpointSubsystem(h, Constants.pinpointName);
         hSlide = new HorizontalSlideSubsystem(h, Constants.hSlideName, Constants.hSlideEncoderDirectionReversed);
-        vSlide = new VerticalSlideSubsystem(h, Constants.vSlideName, Constants.vSlideEncoderDirectionReversed);
+        vSlide = new VerticalSlideSubsystem(h, Constants.vSlideRightName, Constants.vSlideLeftName, Constants.vSlideRightEncoderDirectionReversed, Constants.vSlideLeftEncoderDirectionReversed);
         blocker = new BlockerSubsystem(h, Constants.blockerName);
         grabber = new GrabberSubsystem(h, Constants.grabberName);
         hand = new HandSubsystem(h, Constants.handName);
         intakeRot = new IntakeRotSubsystem(h, Constants.intakeRotName);
-        follower = new FollowerSubsystem(new HolonomicDriveController(new PIDController(Constants.followerXkP, Constants.followerXkI, Constants.followerXkD), new PIDController(Constants.followerYkP, Constants.followerYkI, Constants.followerYkD), new ProfiledPIDController(Constants.followerThetakP, Constants.followerThetakI, Constants.followerThetakD, new TrapezoidProfile.Constraints(Constants.maxVelocity, Constants.maxAcceleration))), pinpoint, new MecanumDriveKinematics(Constants.frontLeftWheelMeters, Constants.frontRightWheelMeters, Constants.backLeftWheelMeters, Constants.backRightWheelMeters), drive);
+        follower = new FollowerSubsystem(new HolonomicDriveController(new PIDController(Constants.followerXkP, Constants.followerXkI, Constants.followerXkD), new PIDController(Constants.followerYkP, Constants.followerYkI, Constants.followerYkD), new HeadingProfiledPIDController(Constants.followerThetakP, Constants.followerThetakI, Constants.followerThetakD, new TrapezoidProfile.Constraints(Constants.maxVelocity, Constants.maxAcceleration))), new MecanumDriveKinematics(Constants.frontLeftWheelMeters, Constants.frontRightWheelMeters, Constants.backLeftWheelMeters, Constants.backRightWheelMeters));
     }
+    public static Command transferCommand = new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                    new SetSlideCommand(vSlide, 0),
+                    new SetSlideCommand(hSlide, 590),
+                    new SetServoCommand(intakeRot, Constants.intakeRotIntakePos),
+                    new SetServoCommand(blocker, Constants.blockerClosePos),
+                    new SetServoCommand(hand, Constants.handTransferPos),
+                    new SetServoCommand(grabber, Constants.grabberOpenPos),
+                    new AutoIntakeCommand(intake, colorSensor, -1, "BlueYellow")
+            ),
+            new ParallelCommandGroup(
+                    new SetSlideCommand(hSlide, 0),
+                    new SetServoCommand(intakeRot, Constants.intakeRotTransferPos),
+                    new IntakeCommand(intake, -0.5)
+            ),
+            new SetServoCommand(blocker, Constants.blockerOpenPos),
+            new WaitCommand(0.2),
+            new ParallelCommandGroup(
+                    new SetServoCommand(grabber, Constants.grabberClosePos),
+                    new IntakeCommand(intake, 0)
+            )
+    );
+    public static Command highBasketScore = new SequentialCommandGroup(
+            new SetSlideCommand(vSlide, Constants.highBasketHeight),
+            new SetServoCommand(hand, Constants.handBasketScorePos),
+            new WaitCommand(0.15),
+            new SetServoCommand(grabber, Constants.grabberOpenPos)
+    );
 }

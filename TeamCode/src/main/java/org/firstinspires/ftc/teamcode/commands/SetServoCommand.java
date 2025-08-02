@@ -19,12 +19,12 @@ import java.util.function.DoubleSupplier;
 public class SetServoCommand extends CommandBase {
 
     private final Subsystem servo;
-    private final int pos;
+    private final double pos;
     private ElapsedTime t;
 
     private boolean b;
 
-    public SetServoCommand(Subsystem servo, int pos) {
+    public SetServoCommand(Subsystem servo, double pos) {
         this.servo = servo;
         this.pos = pos;
         addRequirements(servo);

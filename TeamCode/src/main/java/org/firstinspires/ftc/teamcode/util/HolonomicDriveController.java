@@ -32,7 +32,7 @@ public class HolonomicDriveController {
 
     private final PIDController m_xController;
     private final PIDController m_yController;
-    private final ProfiledPIDController m_thetaController;
+    private final HeadingProfiledPIDController m_thetaController;
 
     private boolean m_firstRun = true;
 
@@ -44,11 +44,11 @@ public class HolonomicDriveController {
      * @param thetaController A profiled PID controller to respond to error in angle.
      */
     public HolonomicDriveController(
-            PIDController xController, PIDController yController, ProfiledPIDController thetaController) {
+            PIDController xController, PIDController yController, HeadingProfiledPIDController thetaController) {
         m_xController = xController;
         m_yController = yController;
         m_thetaController = thetaController;
-        m_thetaController.enableContinuousInput(0, Math.toRadians(360.0));
+        m_thetaController. enableContinuousInput(0, Math.toRadians(360.0));
     }
 
     /**
@@ -166,7 +166,7 @@ public class HolonomicDriveController {
      *
      * @return heading ProfiledPIDController
      */
-    public ProfiledPIDController getThetaController() {
+    public HeadingProfiledPIDController getThetaController() {
         return m_thetaController;
     }
 }

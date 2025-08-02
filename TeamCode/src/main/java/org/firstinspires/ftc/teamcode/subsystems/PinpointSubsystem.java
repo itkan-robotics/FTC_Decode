@@ -8,17 +8,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
 
 public class PinpointSubsystem extends SubsystemBase {
     public GoBildaPinpointDriver pinpoint;
     public PinpointSubsystem(HardwareMap h, String name){
         pinpoint = h.get(GoBildaPinpointDriver.class, name);
-
-        pinpoint.setOffsets(3.8125, 1.875, DistanceUnit.INCH);
+        pinpoint.setOffsets(Constants.pinpointXOffset, Constants.pinpointYOffset, DistanceUnit.INCH);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
-
         pinpoint.resetPosAndIMU();
     }
     public Pose2d getPose(){
