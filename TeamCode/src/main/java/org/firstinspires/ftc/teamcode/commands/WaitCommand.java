@@ -2,11 +2,6 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-
-import java.util.concurrent.TimeUnit;
-import java.util.function.DoubleSupplier;
-
 
 public class WaitCommand extends CommandBase {
 
@@ -20,7 +15,7 @@ public class WaitCommand extends CommandBase {
 
     @Override
     public boolean isFinished(){
-        return TimeUnit.SECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS) == seconds;
+        return (System.nanoTime()-start)/1000000000.0 >= seconds;
     }
 
 }

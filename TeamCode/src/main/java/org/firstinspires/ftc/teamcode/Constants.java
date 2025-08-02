@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.geometry.Translation2d;
 
-import java.util.HashMap;
 
 public class Constants {
     //TODO Find how many inches the robot travels with one full motor rotation

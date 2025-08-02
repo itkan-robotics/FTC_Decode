@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.slides;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public interface Slide{
     public void set(int pos);

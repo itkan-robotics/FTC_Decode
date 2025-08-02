@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
-import java.util.function.DoubleSupplier;
 
 
 public class AutoIntakeCommand extends CommandBase {
