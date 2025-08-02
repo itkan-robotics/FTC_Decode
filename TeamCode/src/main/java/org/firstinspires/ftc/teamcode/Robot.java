@@ -20,6 +20,8 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlinx.coroutines.InactiveNodeList;
+
 
 public class Robot {
     public static IntakeSubsystem intake;
@@ -47,28 +49,6 @@ public class Robot {
         intakeRot = new IntakeRotSubsystem(h, Constants.intakeRotName);
         follower = new FollowerSubsystem(new HolonomicDriveController(new PIDController(Constants.followerXkP, Constants.followerXkI, Constants.followerXkD), new PIDController(Constants.followerYkP, Constants.followerYkI, Constants.followerYkD), new HeadingProfiledPIDController(Constants.followerThetakP, Constants.followerThetakI, Constants.followerThetakD, new TrapezoidProfile.Constraints(Constants.maxVelocity, Constants.maxAcceleration))), new MecanumDriveKinematics(Constants.frontLeftWheelMeters, Constants.frontRightWheelMeters, Constants.backLeftWheelMeters, Constants.backRightWheelMeters));
     }
-    public static Command transferCommand = new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                    new SetSlideCommand(vSlide, 0),
-                    new SetSlideCommand(hSlide, 590),
-                    new SetServoCommand(intakeRot, Constants.intakeRotIntakePos),
-                    new SetServoCommand(blocker, Constants.blockerClosePos),
-                    new SetServoCommand(hand, Constants.handTransferPos),
-                    new SetServoCommand(grabber, Constants.grabberOpenPos),
-                    new AutoIntakeCommand(intake, colorSensor, -1, "BlueYellow")
-            ),
-            new ParallelCommandGroup(
-                    new SetSlideCommand(hSlide, 0),
-                    new SetServoCommand(intakeRot, Constants.intakeRotTransferPos),
-                    new IntakeCommand(intake, -0.5)
-            ),
-            new SetServoCommand(blocker, Constants.blockerOpenPos),
-            new WaitCommand(0.2),
-            new ParallelCommandGroup(
-                    new SetServoCommand(grabber, Constants.grabberClosePos),
-                    new IntakeCommand(intake, 0)
-            )
-    );
     public static Command cycleCommand(Trajectory intakeTrajectory, Trajectory scoreTrajectory){
         return new SequentialCommandGroup(
                 new ParallelCommandGroup(
@@ -114,11 +94,47 @@ public class Robot {
                 new SetServoCommand(grabber, Constants.grabberOpenPos)
         );
     }
-    public static Trajectory reverseTrajectory(Trajectory t){
-        List<Trajectory.State> temp = new ArrayList<>();
-        for(Trajectory.State state : t.getStates()){
-            temp.add(0, state);
-        }
-        return new Trajectory(temp);
-    }
+
+    public static Command extendAndIntakeCommand = new ParallelCommandGroup(
+            new SetSlideCommand(hSlide, 590),
+            new SetServoCommand(blocker, Constants.blockerClosePos),
+            new SetServoCommand(intakeRot, Constants.intakeRotIntakePos),
+            new IntakeCommand(intake, -1),
+            new SetSlideCommand(vSlide, 0),
+            new SetServoCommand(grabber, Constants.grabberOpenPos),
+            new SetServoCommand(hand, Constants.handTransferPos)
+    );
+
+    public static Command transferCommand = new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                    new SetSlideCommand(hSlide, 0),
+                    new SetServoCommand(intakeRot, Constants.intakeRotTransferPos),
+                    new IntakeCommand(intake, -0.5)
+            ),
+            new SetServoCommand(blocker, Constants.blockerOpenPos),
+            new WaitCommand(0.2),
+            new ParallelCommandGroup(
+                    new SetServoCommand(grabber, Constants.grabberClosePos),
+                    new IntakeCommand(intake, 0)
+            )
+    );
+
+    public static Command highBasketPosCommand = new ParallelCommandGroup(
+            new SetSlideCommand(vSlide, Constants.highBasketHeight),
+            new SetServoCommand(hand, Constants.handBasketScorePos)
+    );
+
+    public static Command basketScoreCommand = new SetServoCommand(grabber, Constants.grabberOpenPos);
+
+    public static Command retractCommand = new ParallelCommandGroup(
+            new SetServoCommand(hand, Constants.handTransferPos),
+            new SetSlideCommand(vSlide, 0)
+    );
+
+
+
+
+
+
+
 }
