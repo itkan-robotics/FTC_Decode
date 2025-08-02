@@ -9,10 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import org.firstinspires.ftc.teamcode.util.*;
 
 @Config
 @TeleOp
@@ -23,6 +22,7 @@ public class MaxVeloAccelTuner extends OpMode {
     boolean isRunning;
     DcMotorEx fl, fr, bl, br;
     HashMap<Double, Integer> pairs = new HashMap<>();
+    Datalog datalog;
     @Override
     public void init() {
         fl = hardwareMap.get(DcMotorEx.class, Constants.frontLeftName);
@@ -48,6 +48,8 @@ public class MaxVeloAccelTuner extends OpMode {
         if(Constants.backRightMotorDirectionReversed) br.setDirection(DcMotorSimple.Direction.REVERSE);
 
         isRunning = true;
+        datalog = new Datalog("datalog_01");
+
     }
 
     @Override
@@ -63,22 +65,52 @@ public class MaxVeloAccelTuner extends OpMode {
         if(isRunning){
             int avgTicks = fl.getCurrentPosition()+fr.getCurrentPosition()+bl.getCurrentPosition()+br.getCurrentPosition();
             avgTicks /= 4;
-            pairs.put((System.nanoTime()-startTime)/1000000000.0, avgTicks);
+            datalog.position.set(avgTicks);
+            datalog.writeLine();
         }
         else {
-            String vals = "";
-            for(Map.Entry<Double, Integer> entry : pairs.entrySet()){
-                double time = entry.getKey();
-                int position = entry.getValue();
-                vals += time + " : " + position + "\n";
-            }
-            telemetry.addLine(vals);
-            telemetry.update();
+
         }
         if((System.nanoTime()-startTime)/1000000000.0 >= timeToRun){
             isRunning = false;
         }
 
 
+    }
+    public static class Datalog
+    {
+        // The underlying datalogger object - it cares only about an array of loggable fields
+        private final Datalogger datalogger;
+
+        // These are all of the fields that we want in the datalog.
+        // Note that order here is NOT important. The order is important in the setFields() call below
+        public Datalogger.GenericField position = new Datalogger.GenericField("Position (Ticks)");
+
+        public Datalog(String name)
+        {
+            // Build the underlying datalog object
+            datalogger = new Datalogger.Builder()
+
+                    // Pass through the filename
+                    .setFilename(name)
+
+                    // Request an automatic timestamp field
+                    .setAutoTimestamp(Datalogger.AutoTimestamp.DECIMAL_SECONDS)
+
+                    // Tell it about the fields we care to log.
+                    // Note that order *IS* important here! The order in which we list
+                    // the fields is the order in which they will appear in the log.
+                    .setFields(
+                            position
+                    )
+                    .build();
+        }
+
+        // Tell the datalogger to gather the values of the fields
+        // and write a new line in the log.
+        public void writeLine()
+        {
+            datalogger.writeLine();
+        }
     }
 }

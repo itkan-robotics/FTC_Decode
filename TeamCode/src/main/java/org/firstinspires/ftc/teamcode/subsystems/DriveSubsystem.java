@@ -52,10 +52,10 @@ public class DriveSubsystem extends SubsystemBase {
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        fl.setVelocity(2 * Math.PI * frontLeftMetersPerSecond * Constants.metersToInches / Constants.inchesPerTick, AngleUnit.RADIANS);
-        fr.setVelocity(2 * Math.PI * frontRightMetersPerSecond * Constants.metersToInches / Constants.inchesPerTick, AngleUnit.RADIANS);
-        bl.setVelocity(2 * Math.PI * backLeftMetersPerSecond * Constants.metersToInches / Constants.inchesPerTick, AngleUnit.RADIANS);
-        br.setVelocity(2 * Math.PI * backRightMetersPerSecond * Constants.metersToInches / Constants.inchesPerTick, AngleUnit.RADIANS);
+        fl.setVelocity(2 * Math.PI * frontLeftMetersPerSecond / Constants.inchesPerTick, AngleUnit.RADIANS);
+        fr.setVelocity(2 * Math.PI * frontRightMetersPerSecond / Constants.inchesPerTick, AngleUnit.RADIANS);
+        bl.setVelocity(2 * Math.PI * backLeftMetersPerSecond / Constants.inchesPerTick, AngleUnit.RADIANS);
+        br.setVelocity(2 * Math.PI * backRightMetersPerSecond / Constants.inchesPerTick, AngleUnit.RADIANS);
 
     }
 }
