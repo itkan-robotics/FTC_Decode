@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.Constants;
 
 import java.util.HashMap;
+
+import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 import org.firstinspires.ftc.teamcode.util.*;
 
 @Config
@@ -21,6 +23,7 @@ public class MaxVeloAccelTuner extends OpMode {
     boolean isRunning;
     DcMotorEx fl, fr, bl, br;
     HashMap<Double, Integer> pairs = new HashMap<>();
+    PinpointSubsystem pinpoint;
     Datalog datalog;
     @Override
     public void init() {
@@ -47,8 +50,9 @@ public class MaxVeloAccelTuner extends OpMode {
         if(Constants.backRightMotorDirectionReversed) br.setDirection(DcMotorSimple.Direction.REVERSE);
 
         isRunning = true;
-        datalog = new Datalog("datalog_01");
+        datalog = new Datalog("datalog_02");
 
+        pinpoint = new PinpointSubsystem(hardwareMap, Constants.pinpointName);
     }
 
     @Override
@@ -62,13 +66,14 @@ public class MaxVeloAccelTuner extends OpMode {
             br.setPower(1);
         }
         if(isRunning){
-            int avgTicks = fl.getCurrentPosition()+fr.getCurrentPosition()+bl.getCurrentPosition()+br.getCurrentPosition();
-            avgTicks /= 4;
-            datalog.position.set(avgTicks);
+            datalog.position.set(Math.sqrt(Math.pow(pinpoint.getPose().getX(), 2) + Math.pow(pinpoint.getPose().getY(), 2)));
             datalog.writeLine();
         }
         else {
-
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
         }
         if((System.nanoTime()-startTime)/1000000000.0 >= timeToRun){
             isRunning = false;

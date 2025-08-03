@@ -4,8 +4,7 @@ import com.arcrobotics.ftclib.geometry.Translation2d;
 
 
 public class Constants {
-    //TODO Find how many inches the robot travels with one full motor rotation
-    public static final double inchesPerTick = 7.8;
+    public static final double inchesPerTick = 0.06492335437330929;
     public static final double blockerOpenPos = 0.5;
     public static final double blockerClosePos = 0;
     public static final double grabberOpenPos = 0.1;
@@ -42,11 +41,10 @@ public class Constants {
     public static final double pinpointXOffset = 3.8125;
     public static final double pinpointYOffset = 1.875;
 
-    //TODO Tune these wheel offset values
-    public static final Translation2d frontLeftWheelMeters = null;
-    public static final Translation2d frontRightWheelMeters = null;
-    public static final Translation2d backLeftWheelMeters = null;
-    public static final Translation2d backRightWheelMeters = null;
+    public static final Translation2d frontLeftWheelMeters = new Translation2d(5, 5.75);
+    public static final Translation2d frontRightWheelMeters = new Translation2d(5, -5.75);
+    public static final Translation2d backLeftWheelMeters = new Translation2d(-5, 5.75);
+    public static final Translation2d backRightWheelMeters = new Translation2d(-5, -5.75);
 
     //TODO Tune these follower PID values
     public static final double followerXkP = 0;
@@ -59,9 +57,8 @@ public class Constants {
     public static final double followerThetakI = 0;
     public static final double followerThetakD = 0;
 
-    //TODO Tune to find max acceleration and max velocity
-    public static final double maxAcceleration = 0;
-    public static final double maxVelocity = 0;
+    public static final double maxAcceleration = 70;
+    public static final double maxVelocity = 85;
 
 
 

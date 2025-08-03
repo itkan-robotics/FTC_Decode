@@ -47,7 +47,7 @@ public class HolonomicDriveController {
         m_xController = xController;
         m_yController = yController;
         m_thetaController = thetaController;
-        m_thetaController. enableContinuousInput(0, Math.toRadians(360.0));
+        m_thetaController.enableContinuousInput(0, Math.toRadians(360.0));
     }
 
     /**
@@ -118,7 +118,7 @@ public class HolonomicDriveController {
                 xFF + xFeedback, yFF + yFeedback, thetaFF, currentPose.getRotation());
     }
 
-    /**
+    /**x
      * Returns the next output of the holonomic drive controller.
      *
      * @param currentPose The current pose, as measured by odometry or pose estimator.

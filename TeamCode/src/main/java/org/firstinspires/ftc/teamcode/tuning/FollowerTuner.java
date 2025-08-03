@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.geometry.Pose2d;
@@ -22,8 +23,8 @@ import org.firstinspires.ftc.teamcode.util.TrapezoidProfile;
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp
 @Config
+@TeleOp
 public class FollowerTuner extends OpMode {
     PinpointSubsystem pinpoint;
     DriveSubsystem drive;
@@ -31,21 +32,12 @@ public class FollowerTuner extends OpMode {
     MecanumDriveKinematics mecanumDriveKinematics;
     Trajectory trajectory;
     public static double xP, xI, xD, yP, yI, yD, tP, tI, tD;
-    private long currentTime;
-    private long startTime;
     @Override
     public void init() {
-        currentTime = 0;
-        startTime = System.nanoTime();
         drive = new DriveSubsystem(hardwareMap, Constants.frontLeftName, Constants.frontRightName, Constants.backLeftName, Constants.backRightName, Constants.frontLeftMotorDirectionReversed, Constants.frontRightMotorDirectionReversed, Constants.backLeftMotorDirectionReversed, Constants.backRightMotorDirectionReversed);
         pinpoint = new PinpointSubsystem(hardwareMap, Constants.pinpointName);
         holonomicDriveController = new HolonomicDriveController(new PIDController(Constants.followerXkP, Constants.followerXkI, Constants.followerXkD), new PIDController(Constants.followerYkP, Constants.followerYkI, Constants.followerYkD), new HeadingProfiledPIDController(Constants.followerThetakP, Constants.followerThetakI, Constants.followerThetakD, new TrapezoidProfile.Constraints(Constants.maxVelocity, Constants.maxAcceleration)));
         mecanumDriveKinematics = new MecanumDriveKinematics(Constants.frontLeftWheelMeters, Constants.frontRightWheelMeters, Constants.backLeftWheelMeters, Constants.backRightWheelMeters);
-        List<Trajectory.State> trajStates = new ArrayList<>();
-        for(int i = 0; i < 1000000; i++){
-            trajStates.add(new Trajectory.State(((double)i)/100, 0, 0, new Pose2d(new Translation2d(0, 0), new Rotation2d(0)), 0));
-        }
-        trajectory = new Trajectory(trajStates);
         xP = 0;
         xI = 0;
         xD = 0;
@@ -60,10 +52,7 @@ public class FollowerTuner extends OpMode {
     @Override
     public void loop() {
         holonomicDriveController = new HolonomicDriveController(new PIDController(xP, xI, xD), new PIDController(yP, yI, yD), new HeadingProfiledPIDController(tP, tI, tD, new TrapezoidProfile.Constraints(Constants.maxVelocity, Constants.maxAcceleration)));
-        currentTime = System.nanoTime();
-        double trajectoryTime = (currentTime-startTime)/1000000000.0;
-        Trajectory.State targetState = trajectory.sample(trajectoryTime);
-        ChassisSpeeds targetSpeed = holonomicDriveController.calculate(pinpoint.getPose(), targetState, targetState.poseMeters.getRotation());
+        ChassisSpeeds targetSpeed = holonomicDriveController.calculate(pinpoint.getPose(), new Trajectory.State(0, 0, 0, new Pose2d(new Translation2d(0, 0), new Rotation2d(0)), 0), new Rotation2d(0));
         MecanumDriveWheelSpeeds targetWheelSpeeds = mecanumDriveKinematics.toWheelSpeeds(targetSpeed);
         drive.setSpeed(targetWheelSpeeds.frontLeftMetersPerSecond, targetWheelSpeeds.frontRightMetersPerSecond, targetWheelSpeeds.rearLeftMetersPerSecond, targetWheelSpeeds.rearRightMetersPerSecond);
     }

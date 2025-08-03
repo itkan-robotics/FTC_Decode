@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,11 +10,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
-@TeleOp
 @Config
+@TeleOp
 public class InchesPerTickTuner extends OpMode {
 
     public static int inchesPushed = 72;
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    TelemetryPacket packet = new TelemetryPacket();
     DcMotorEx fl, fr, bl, br;
     @Override
     public void init() {
@@ -37,10 +41,13 @@ public class InchesPerTickTuner extends OpMode {
 
     @Override
     public void loop() {
-        int avgTicks = fl.getCurrentPosition()+fr.getCurrentPosition()+bl.getCurrentPosition()+br.getCurrentPosition();
+        int avgTicks = Math.abs(fl.getCurrentPosition())+Math.abs(fr.getCurrentPosition())+Math.abs(bl.getCurrentPosition())+Math.abs(br.getCurrentPosition());
         avgTicks /= 4;
         telemetry.addData("Current Ticks", avgTicks);
         telemetry.addData("Inches Per Tick", ((double)inchesPushed)/avgTicks);
         telemetry.update();
+        packet.put("Current Ticks", avgTicks);
+        packet.put("Inches Per Tick", ((double)inchesPushed)/avgTicks);
+        dashboard.sendTelemetryPacket(packet);
     }
 }

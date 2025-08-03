@@ -216,7 +216,6 @@ public class HeadingPIDController {
      * @return the position tolerance of the controller.
      * @deprecated Use getErrorTolerance() instead.
      */
-    @Deprecated(forRemoval = true, since = "2025")
     public double getPositionTolerance() {
         return m_errorTolerance;
     }
@@ -227,7 +226,6 @@ public class HeadingPIDController {
      * @return the velocity tolerance of the controller.
      * @deprecated Use getErrorDerivativeTolerance() instead.
      */
-    @Deprecated(forRemoval = true, since = "2025")
     public double getVelocityTolerance() {
         return m_errorDerivativeTolerance;
     }
@@ -371,7 +369,6 @@ public class HeadingPIDController {
      * @return The error.
      * @deprecated Use getError() instead.
      */
-    @Deprecated(forRemoval = true, since = "2025")
     public double getPositionError() {
         return m_error;
     }
@@ -382,7 +379,6 @@ public class HeadingPIDController {
      * @return The velocity error.
      * @deprecated Use getErrorDerivative() instead.
      */
-    @Deprecated(forRemoval = true, since = "2025")
     public double getVelocityError() {
         return m_errorDerivative;
     }
