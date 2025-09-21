@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class TurretTuner extends OpMode {
     public static double p, i, d, f;
     public static int target;
+    public static int current;
     public DcMotorEx turret = hardwareMap.get(DcMotorEx.class, "turret");
 
     @Override
@@ -29,7 +30,9 @@ public class TurretTuner extends OpMode {
         turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turret.setPower(1);
         TelemetryPacket t = new TelemetryPacket();
-        t.addLine("Current Position: " + target);
+        current = turret.getCurrentPosition();
+        t.addLine("Current Position: " + current);
+        t.addLine("Target Position: " + target);
         FtcDashboard.getInstance().sendTelemetryPacket(t);
     }
 }
