@@ -8,8 +8,19 @@ import org.firstinspires.ftc.teamcode.subsystems.PinpointSubsystem;
 public class UpdateCommand extends CommandBase {
     PinpointSubsystem pinpoint;
     LimelightSubsystem ll;
-    public UpdateCommand(PinpointSubsystem pinpoint, LimelightSubsystem ll){
+
+    public UpdateCommand(PinpointSubsystem pinpoint, LimelightSubsystem ll) {
         this.pinpoint = pinpoint;
         this.ll = ll;
+    }
+
+    @Override
+    public void execute() {
+
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

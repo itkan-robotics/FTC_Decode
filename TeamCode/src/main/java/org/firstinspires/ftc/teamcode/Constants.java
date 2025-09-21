@@ -26,6 +26,9 @@ public class Constants {
     public static final String llName = "limelight";
     public static final String holdName = "hold";
 
+    public static final double[] distLT = {1, 2, 3};
+    public static final double[] veloLT = {2, 4, 7};
+
     public static final Translation2d frontLeftWheelMeters = new Translation2d(5, 5.75);
     public static final Translation2d frontRightWheelMeters = new Translation2d(5, -5.75);
     public static final Translation2d backLeftWheelMeters = new Translation2d(-5, 5.75);

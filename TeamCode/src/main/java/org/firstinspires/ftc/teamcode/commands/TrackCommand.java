@@ -14,4 +14,21 @@ public class TrackCommand extends CommandBase {
         this.pinpoint = ll;
         addRequirements(turret);
     }
+    @Override
+    public void execute(){
+
+        double d = Math.toDegrees(Math.atan2(pinpoint.getPose().getY(), pinpoint.getPose().getX()));
+        double theta =  Math.toDegrees(pinpoint.getPose().getHeading()) - d;
+        int targetTick = 225;
+        if(d <= -90){
+            targetTick = 0;
+        }
+        else if (d >= 90){
+            targetTick = 550;
+        }
+        else {
+            targetTick = (int)(550.0 / 180 * (d+90));
+        }
+        turret.set(targetTick);
+    }
 }
