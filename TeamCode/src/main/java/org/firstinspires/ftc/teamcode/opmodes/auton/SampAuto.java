@@ -39,15 +39,15 @@ public class SampAuto extends OpMode {
         samp3Intake = TrajectoryGenerator.generateTrajectory(basketPose, interiorPoses, samp3IntakePose, new TrajectoryConfig(Constants.maxVelocity, Constants.maxAcceleration));
         samp3Score = TrajectoryGenerator.generateTrajectory(samp3IntakePose, interiorPoses, basketPose, new TrajectoryConfig(Constants.maxVelocity, Constants.maxAcceleration));
 
-        Command autonomous = new SequentialCommandGroup(
-                Robot.getHighBasketScoreCommand(preloadScore),
-                Robot.cycleCommand(samp1Intake, samp1Score),
-                Robot.cycleCommand(samp2Intake, samp2Score),
-                Robot.cycleCommand(samp3Intake, samp3Score)
-        );
+//        Command autonomous = new SequentialCommandGroup(
+//                Robot.getHighBasketScoreCommand(preloadScore),
+//                Robot.cycleCommand(samp1Intake, samp1Score),
+//                Robot.cycleCommand(samp2Intake, samp2Score),
+//                Robot.cycleCommand(samp3Intake, samp3Score)
+//        );
 
 
-        CommandScheduler.getInstance().schedule(autonomous);
+        //CommandScheduler.getInstance().schedule(autonomous);
 
     }
 
