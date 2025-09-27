@@ -27,9 +27,9 @@ public class Solo extends CommandOpMode {
 
         new GamepadButton(gamepad, GamepadKeys.Button.DPAD_UP).whenPressed(new RunClimbCommand(Robot.climb, 1)).whenReleased(new RunClimbCommand(Robot.climb, 0));
         new GamepadButton(gamepad, GamepadKeys.Button.DPAD_DOWN).whenPressed(new RunClimbCommand(Robot.climb, -1)).whenReleased(new RunClimbCommand(Robot.climb, 0));
-        new GamepadButton(gamepad, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(new IntakeCommand(Robot.intake, -1)).whenReleased(new IntakeCommand(Robot.intake, 0));
-        new GamepadButton(gamepad, GamepadKeys.Button.LEFT_BUMPER).whenPressed(new IntakeCommand(Robot.intake, -1)).whenReleased(new IntakeCommand(Robot.intake, 0));
-        new GamepadButton(gamepad, GamepadKeys.Button.X).whenPressed(new SetServoCommand(Robot.hold, 0.5)).whenPressed(new IntakeCommand(Robot.intake, -1)).whenReleased(new SetServoCommand(Robot.hold, 0.75)).whenReleased(new IntakeCommand(Robot.intake, 0));
-        new GamepadButton(gamepad, GamepadKeys.Button.Y).whenPressed(new ShootCommand(Robot.shooter, Robot.pinpoint));
+        new GamepadButton(gamepad, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(new IntakeCommand(Robot.intake, Robot.hold, -1)).whenReleased(new IntakeCommand(Robot.intake, Robot.hold, 0));
+        new GamepadButton(gamepad, GamepadKeys.Button.LEFT_BUMPER).whenPressed(new IntakeCommand(Robot.intake, Robot.hold, -1)).whenReleased(new IntakeCommand(Robot.intake, Robot.hold, 0));
+        new GamepadButton(gamepad, GamepadKeys.Button.X).whenPressed(new SetServoCommand(Robot.hold, 0.5)).whenPressed(new IntakeCommand(Robot.intake, Robot.hold, -1)).whenReleased(new IntakeCommand(Robot.intake,Robot.hold, 0));
+        new GamepadButton(gamepad, GamepadKeys.Button.Y).whenPressed(new ShootCommand(Robot.shooter, Robot.pinpoint, Robot.hold, Robot.intake));
     }
 }

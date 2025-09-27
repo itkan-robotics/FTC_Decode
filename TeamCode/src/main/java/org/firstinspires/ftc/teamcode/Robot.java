@@ -39,6 +39,8 @@ public class Robot {
         ll.get().setPollRateHz(10);
         ll.get().start();
         ll.get().pipelineSwitch(0);
+        shooter.setPIDF(Constants.shooterP, Constants.shooterI, Constants.shooterD, Constants.shooterF);
+        turret.setPIDF(Constants.turretP, Constants.turretI, Constants.turretD, Constants.turretF);
     }
 
 

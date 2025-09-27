@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.teamcode.Constants;
+
 public class ShooterSubsystem extends SubsystemBase {
     private DcMotorEx slide;
     double rpm = 0;
@@ -23,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
         this.rpm = rpm;
     }
     public boolean atVelocity(){
-        return Math.abs(slide.getVelocity() - rpm) < 10;
+        return Math.abs(slide.getVelocity() - rpm) < Constants.shooterVeloTol;
     }
     public void setPIDF(double p, double i, double d, double f) {
         slide.setVelocityPIDFCoefficients(p, i, d, f);
